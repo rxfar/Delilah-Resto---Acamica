@@ -69,7 +69,7 @@ Incluye las siguientes acciones:
 1. Clone the repo / Cloná el repo:
 
 ```
-git clone https://github.com/rxfar/Delilah-Resto---Acamica.git
+git clone https://github.com/rxfar/Delilah-Resto--REST-API.git
 ```
 
 2. Install dependencies / Instalá las dependencias
