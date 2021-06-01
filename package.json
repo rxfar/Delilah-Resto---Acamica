@@ -5,9 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "rosarioedithfarias@gmail.com",
   "license": "ISC",
-  "description": "Proyecto 3 Acamica",
+  "description": "3rd proyect for Acamica certification",
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
@@ -26,10 +26,10 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rxfar/DelilahResto.git"
+    "url": "git+https://github.com/rxfar/Delilah-Resto---Acamica.git"
   },
   "bugs": {
-    "url": "https://github.com/rxfar/DelilahResto/issues"
+    "url": "https://github.com/rxfar/Delilah-Resto---Acamica/issues"
   },
-  "homepage": "https://github.com/rxfar/DelilahResto#readme"
+  "homepage": "https://github.com/rxfar/Delilah-Resto---Acamica#readme"
 }

@@ -11,7 +11,7 @@ app.listen(PORT, () => {
 });
 
 const {productValidation, userValidation, onlyAdmin, userOK, orderId} = require('./middlewares');
-const {signUp,  logIn, getClients, deleteClient, createProduct, deleteProduct, updateProduct, getAllProducts, addItemToOrder, deleteItemOfOrderList, postOrder, getAllOrders, updateOrder, getOrder, deleteOrder} = require('./functions');
+const {signUp,  logIn, getCustomers, deleteCustomer, createProduct, deleteProduct, updateProduct, getAllProducts, addItemToOrder, deleteItemOfOrderList, postOrder, getCustomerWishes, getWishes, getAllOrders, updateOrder, getOrder, deleteOrder} = require('./functions');
 
 /* 
 app.get('/', function(req, res) {
@@ -22,8 +22,8 @@ app.get('/', function(req, res) {
 // Customers
 app.post('/customers', signUp);
 app.post('/customers/login', userValidation, logIn);
-app.get('/customers', onlyAdmin, getClients);
-app.delete('/customers/:id', onlyAdmin, deleteClient);
+app.get('/customers', onlyAdmin, getCustomers);
+app.delete('/customers/:id', onlyAdmin, deleteCustomer);
 
 // Products
 app.get('/products', getAllProducts);
@@ -34,6 +34,8 @@ app.delete('/products/:id', productValidation, onlyAdmin, deleteProduct);
 // Orders
 app.post('/wishes', userOK, addItemToOrder);
 app.delete('/wishes', userOK, deleteItemOfOrderList);
+app.get('/wishes', userOK, getWishes);
+app.get('/wishes/:customer_id', onlyAdmin, getCustomerWishes);
 app.post('/orders', userOK, postOrder);
 app.get('/orders/:id', userOK, getOrder);
 app.get('/orders', onlyAdmin, getAllOrders);

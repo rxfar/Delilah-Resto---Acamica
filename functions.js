@@ -43,14 +43,14 @@ module.exports ={
     
     },
 
-    getClients: (req,res)=>{
+    getCustomers: (req,res)=>{
         DataBase.query('SELECT * FROM customers', { type: sequelize.QueryTypes.SELECT }).then(result =>res.status(200).json(result))
     },
 
-    deleteClient: (req, res) => { 
+    deleteCustomer: (req, res) => { 
         const id = req.params.id   
             DataBase.query(`DELETE FROM customers WHERE id = ${id}`,{type: sequelize.QueryTypes.DELETE})
-            .then(result => (console.log(result)) || res.status(200).json("Client successfully deleted"))
+            .then(result => (console.log(result)) || res.status(200).json("User successfully deleted"))
             .catch(error => console.log(error) || res.status(400).send('Invalid data'))  
     },
 
@@ -99,28 +99,48 @@ module.exports ={
     },
 
     addItemToOrder: async (req, res) =>{
-        const client_id = req.user.user.id
+        const userId = req.user.user.id
         DataBase.query(
-            `INSERT INTO wishes (quant, product_id, client_id) VALUES (:quant, :product_id, ${client_id})`,{
+            `INSERT INTO wishes (quant, product_id, customer_id) VALUES (:quant, :product_id, ${userId})`,{
             replacements: req.body
         }).then(result => console.log(result) || res.status(200).json('Product successfully added to order'))
           .catch(error => console.log(error) || res.status(400).send('Invalid data'))
     },
 
     deleteItemOfOrderList: async (req, res) =>{
-        const client_id = req.user.user.id
+        const userId = req.user.user.id
         const product_id = req.body.product_id
-        DataBase.query(`DELETE FROM wishes WHERE client_id = ${client_id} AND product_id = ${product_id}`,{type: sequelize.QueryTypes.DELETE})
+        DataBase.query(`DELETE FROM wishes WHERE customer_id = ${userId} AND product_id = ${product_id}`,{type: sequelize.QueryTypes.DELETE})
             .then(result => console.log(result) || res.status(200).json('Product successfully deleted'))
             .catch(error => console.log(error) || res.status(400).send('Invalid data'))
     },
 
+    getWishes: async (req,res) => {
+        const userId = req.user.user.id
+        const db = await DataBase.query(`SELECT * FROM wishes WHERE customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
+        if(db == ""){
+            return res.status(400).json('There arent items in your list');
+        }else { 
+        res.status(200).json(db)
+        }
+    },
+
+    getCustomerWishes: async (req,res) => {
+        const userId = req.params.customer_id
+        const db = await DataBase.query(`SELECT * FROM wishes WHERE customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
+        if(db == ""){
+            return res.status(400).json('There arent items in customers list');
+        }else { 
+        res.status(200).json(db)
+        }
+    },
+
     postOrder: async (req, res) =>{
-        const client_id = req.user.user.id
+        const userId = req.user.user.id
         DataBase.query(
-            `INSERT INTO orders (client_id, payment_id) VALUES (${client_id}, :payment_id)`,{
+            `INSERT INTO orders (customer_id, payment_id) VALUES (${userId}, :payment_id)`,{
             replacements: req.body
-        }).then(result => console.log(result) || res.status(200).json(`Order successfully created!`)) // ¿Cómo agrego en este console.log el listado de productos de la orden?
+        }).then(result => console.log(result) || res.status(200).json(`Order successfully created!`)) 
           .catch(error => console.log(error) || res.status(400).send('Invalid data'))
     },
 
@@ -136,13 +156,15 @@ module.exports ={
     updateOrder: (req,res) => {
         const id = req.params.id
         const status = req.body.status
-        DataBase.query(`UPDATE orders SET status = '${status}' WHERE order_id = ${id} `,{type: sequelize.QueryTypes.SET}).then(result => (console.log(result)) || res.status(200).json("State successfullt updated"))
+        DataBase.query(`UPDATE orders SET status = '${status}' WHERE order_id = ${id} `,{type: sequelize.QueryTypes.SET})
+        .then(result => (console.log(result)) || res.status(200).json('State successfully updated'))
+        .catch(error => console.log(error) || res.status(400).send('Invalid status'))
     },
 
     getOrder: async (req,res) => {
         const id = req.params.id
         const userId = req.user.user.id
-        const db = await DataBase.query(`SELECT * FROM orders WHERE order_id = ${id} AND client_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
+        const db = await DataBase.query(`SELECT * FROM orders WHERE order_id = ${id} AND customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
         if(db == ""){
             return res.status(400).json('You have not placed any order');
         }else { 
@@ -152,13 +174,10 @@ module.exports ={
 
     deleteOrder: async (req,res) => {
         const id = req.params.id
-        const client_id = req.body.client_id  
+        const customer_id = req.body.customer_id
         DataBase.query(`DELETE FROM orders WHERE order_id = ${id}`,{type: sequelize.QueryTypes.DELETE})
-        // DataBase.query(`DELETE FROM wishes WHERE client_id = ${client_id}`,{type: sequelize.QueryTypes.DELETE}) -> ¿cómo encuentro el client_id de la tabla wishes que coincide con el client_id de la tabla orders? 
+        DataBase.query(`DELETE FROM wishes WHERE customer_id = ${customer_id}`,{type: sequelize.QueryTypes.DELETE})
         .then(result => (console.log(result)) || res.status(200).json("Order successfully deleted"))
         .catch(error => console.log(error) || res.status(400).send('Invalid data'))
     }
-
-    // Agregar que DELETE en tabla wishes cuando el status de orders de un cliente pase a completed 
-
 }

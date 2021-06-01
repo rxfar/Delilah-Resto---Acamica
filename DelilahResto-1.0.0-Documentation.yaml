@@ -1,0 +1,458 @@
+---
+swagger: "2.0"
+info:
+  description: This is a restaurant API
+  version: 1.0.0
+  title: DelilahResto
+  contact:
+    email: rosarioedithfarias@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: virtserver.swaggerhub.com
+basePath: /rxfar/DelilahResto/1.0.0
+tags:
+- name: customers
+  description: Restaurant customers
+- name: products
+  description: Restaurant products
+- name: wishes
+  description: Customers wanted products / Customers wishes
+- name: orders
+  description: Customers orders
+schemes:
+- https
+paths:
+  /customers:
+    get:
+      tags:
+      - customers
+      summary: Searches customer list
+      description: Get all customers list
+      operationId: getCustomers
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "400":
+          description: bad input parameter
+    post:
+      tags:
+      - customers
+      summary: sign up
+      description: Adds a customer
+      operationId: signUp
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Customer
+        description: Customer added
+        required: false
+        schema:
+          $ref: '#/definitions/Customer'
+      responses:
+        "200":
+          description: User successfully created!
+        "400":
+          description: Invalid data
+  /customers/login:
+    post:
+      tags:
+      - customers
+      summary: log in
+      description: log in
+      operationId: logIn
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: LogIn
+        description: Customers log in
+        required: false
+        schema:
+          $ref: '#/definitions/LogIn'
+      responses:
+        "400":
+          description: invalid user/password
+  /customers/{id}:
+    delete:
+      tags:
+      - customers
+      summary: Delete customer
+      description: Delete customer - Only admin
+      operationId: deleteCustomer
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: User successfully deleted
+        "400":
+          description: Invalid data
+  /products:
+    get:
+      tags:
+      - products
+      summary: Get products list
+      description: Get all products list
+      operationId: getAllProducts
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "400":
+          description: Invalid data
+    post:
+      tags:
+      - products
+      summary: Create products
+      description: Create products - Only admin
+      operationId: createProduct
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Product
+        description: Product added
+        required: false
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        "200":
+          description: Product successfully added
+        "400":
+          description: Invalid data
+  /products/{id}:
+    put:
+      tags:
+      - products
+      summary: Update product
+      description: Update product - Only admin
+      operationId: updateProduct
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: integer
+      - in: body
+        name: Product params
+        description: Params required for update
+        required: false
+        schema:
+          $ref: '#/definitions/Product params'
+      responses:
+        "200":
+          description: Product updated
+        "400":
+          description: Invalid data
+    delete:
+      tags:
+      - products
+      summary: Delete product
+      description: Delete product - Only admin
+      operationId: deleteProduct
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Product successfully deleted
+        "400":
+          description: Invalid data
+  /wishes:
+    get:
+      tags:
+      - wishes
+      summary: Get wishes list
+      description: Get your wishes list - Only loged users
+      operationId: getWishes
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "400":
+          description: There arent items in your list
+    post:
+      tags:
+      - wishes
+      summary: Add item to wishes list
+      description: Add item to order / wishes list - Only loged users
+      operationId: addItemToOrder
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Product and quantity
+        description: Product to add
+        required: false
+        schema:
+          $ref: '#/definitions/Product and quantity'
+      responses:
+        "200":
+          description: Product successfully added to order
+        "400":
+          description: Invalid data
+    delete:
+      tags:
+      - wishes
+      summary: Delete product of wishes / order
+      description: Delete product of wishes / order - Only loged users
+      operationId: deleteItemOfOrderList
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: Product
+        description: Product to delete
+        required: false
+        schema:
+          $ref: '#/definitions/Product_1'
+      responses:
+        "200":
+          description: Product successfully deleted
+        "400":
+          description: Invalid data
+  /wishes/{customer_id}:
+    get:
+      tags:
+      - wishes
+      summary: Get customer wishes list
+      description: Get a customer wishes list - Only admin
+      operationId: getCustomerWishes
+      produces:
+      - application/json
+      parameters:
+      - name: customer_id
+        in: path
+        required: true
+        type: integer
+      responses:
+        "400":
+          description: There arent items in customers list
+  /orders:
+    get:
+      tags:
+      - orders
+      summary: Get all orders list
+      description: Get orders list - Only admin
+      operationId: getAllOrders
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "400":
+          description: No orders here!
+    post:
+      tags:
+      - orders
+      summary: Post order
+      description: Confirm your wishes list and post the order - Only loged users
+      operationId: postOrder
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: payment_id
+        description: Payment id
+        required: false
+        schema:
+          type: string
+          example: Cash
+          enum:
+          - Cash
+          - Creditcard
+          - Debitcard
+      responses:
+        "200":
+          description: Order successfully created!
+        "400":
+          description: Invalid data
+  /orders/{id}:
+    get:
+      tags:
+      - orders
+      summary: Get your order info
+      description: Get your order - Only loged users
+      operationId: getOrder
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Order id
+        required: true
+        type: integer
+      responses:
+        "400":
+          description: You have not placed any order
+    put:
+      tags:
+      - orders
+      summary: Update customer order
+      description: Update customer order - Only admin
+      operationId: updateOrder
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Order id
+        required: true
+        type: integer
+      - in: body
+        name: status
+        description: Order status
+        required: false
+        schema:
+          type: string
+          example: Canceled
+          enum:
+          - New
+          - Confirmed
+          - InProgress
+          - Sent
+          - Delivered
+          - Canceled
+      responses:
+        "200":
+          description: State successfully updated
+        "400":
+          description: Invalid status
+    delete:
+      tags:
+      - orders
+      summary: Delete an order
+      description: Delete customer order - Only admin
+      operationId: deleteOrder
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        description: Order id
+        required: true
+        type: integer
+      - in: body
+        name: customer_id
+        description: Customer id
+        required: false
+        schema:
+          type: integer
+          example: 12
+      responses:
+        "200":
+          description: Product successfully deleted
+        "400":
+          description: Invalid data
+definitions:
+  Product params:
+    type: object
+    properties:
+      price:
+        type: integer
+        example: 600
+      disponibility:
+        type: integer
+        example: 1
+  Product_1:
+    type: object
+    properties:
+      product_id:
+        type: integer
+        example: 12
+  Customer:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 1
+      user:
+        type: string
+        example: rxxfar123
+      name:
+        type: string
+        example: Rosario
+      lastname:
+        type: string
+        example: Farias
+      pass:
+        type: string
+        example: password
+      phone:
+        type: integer
+        example: 1111111111
+      adress:
+        type: string
+        example: an adress
+      is_admin:
+        type: integer
+        example: 0
+  Product and quantity:
+    type: object
+    properties:
+      product_id:
+        type: integer
+        example: 12
+      quant:
+        type: integer
+        example: 1
+  Product:
+    type: object
+    properties:
+      product:
+        type: string
+        example: Hamburger
+      description:
+        type: string
+        example: Meat burger with tomatoe and onion
+      price:
+        type: integer
+        example: 500
+      disponibility:
+        type: integer
+        example: 0
+      image_id:
+        type: integer
+        example: 12
+  LogIn:
+    type: object
+    properties:
+      user:
+        type: string
+        example: rxxfar123
+      pass:
+        type: string
+        example: password

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-05-2021 a las 19:25:44
+-- Tiempo de generación: 31-05-2021 a las 03:04:25
 -- Versión del servidor: 10.4.17-MariaDB
 -- Versión de PHP: 8.0.1
 
@@ -59,17 +59,15 @@ CREATE TABLE `orders` (
   `status` enum('New','Confirmed','InProgress','Sent','Delivered','Canceled') NOT NULL DEFAULT 'New',
   `date` datetime NOT NULL DEFAULT current_timestamp(),
   `payment_id` enum('Cash','Creditcard','Debitcard') NOT NULL,
-  `client_id` int(11) NOT NULL
+  `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `status`, `date`, `payment_id`, `client_id`) VALUES
-(10, 'New', '2021-05-26 00:51:23', 'Cash', 1),
-(11, 'New', '2021-05-26 00:53:20', 'Cash', 1),
-(12, 'New', '2021-05-26 00:56:56', 'Cash', 1);
+INSERT INTO `orders` (`order_id`, `status`, `date`, `payment_id`, `customer_id`) VALUES
+(16, 'New', '2021-05-31 00:59:03', 'Creditcard', 1);
 
 -- --------------------------------------------------------
 
@@ -104,15 +102,17 @@ CREATE TABLE `wishes` (
   `id` int(11) NOT NULL,
   `quant` int(2) NOT NULL DEFAULT 1,
   `product_id` int(11) NOT NULL,
-  `client_id` int(11) NOT NULL
+  `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `wishes`
 --
 
-INSERT INTO `wishes` (`id`, `quant`, `product_id`, `client_id`) VALUES
-(5, 1, 2, 5);
+INSERT INTO `wishes` (`id`, `quant`, `product_id`, `customer_id`) VALUES
+(5, 1, 2, 5),
+(15, 2, 1, 1),
+(16, 2, 2, 1);
 
 --
 -- Índices para tablas volcadas
@@ -157,7 +157,7 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT de la tabla `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
@@ -169,7 +169,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT de la tabla `wishes`
 --
 ALTER TABLE `wishes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
