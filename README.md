@@ -1,4 +1,4 @@
-# Delilah-Resto---Acamica
+# Delilah Resto
 
 RESTful API for a restaurant built with express, nodejs and MySQL. 
 Version: "1.0.0". 
@@ -83,11 +83,11 @@ node delilah.js
 ```
 
 Expected result is: / El resultado esperado es:
-
+```
 Server running on port 3001
 Executing (default): SELECT 1+1 AS result
 Connection has been established successfully.
-
+```
 ## ENDPOINTS
 
 You'll find APIs requests in documentation file "DelilahResto-1.0.0-Documentation.yaml"/"DelilahResto-1.0.0-Documentation.json". You'll also find requests tests in "DelilahResto.postman_collection.json" file.
