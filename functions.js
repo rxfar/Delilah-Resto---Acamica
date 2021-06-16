@@ -101,7 +101,7 @@ module.exports ={
     addItemToOrder: async (req, res) =>{
         const userId = req.user.user.id
         const product_id = req.body.product_id
-        DataBase.query(`INSERT INTO wishes (quant, product_id, customer_id) VALUES (:quant, ${product_id}, ${userId})`,{replacements: req.body})
+        DataBase.query(`INSERT INTO wishes (quant, product_id, customer_id, unity_price, total_price) VALUES (:quant, ${product_id}, ${userId}, (SELECT price FROM products WHERE id = "${product_id}"), (quant*unity_price))`,{replacements: req.body})
         .then(result => console.log(result) || res.status(200).json('Product successfully added to order'))
         .catch(error => console.log(error) || res.status(400).send('Invalid data'))
     },
@@ -136,7 +136,7 @@ module.exports ={
 
     postOrder: async (req, res) =>{
         const userId = req.user.user.id
-        DataBase.query(`INSERT INTO orders (customer_id, payment_id) VALUES (${userId}, :payment_id)`,{replacements: req.body})
+        DataBase.query(`INSERT INTO orders (customer_name, customer_lastname, customer_phone, customer_adress,customer_id, payment_id, total) VALUES ((SELECT name FROM customers WHERE id = "${userId}"), (SELECT lastname FROM customers WHERE id = "${userId}"), (SELECT phone FROM customers WHERE id = "${userId}"), (SELECT adress FROM customers WHERE id = "${userId}"), ${userId}, :payment_id, (SELECT SUM(total_price) FROM wishes WHERE customer_id = "${userId}"))`,{replacements: req.body})
         DataBase.query(`INSERT INTO details (customer_id, product_id, quant) SELECT customer_id, product_id, quant FROM wishes WHERE customer_id = "${userId}"`,{replacements: req.body})
         .then(result => console.log(result) || res.status(200).json(`Order successfully created!`)) 
         .catch(error => console.log(error) || res.status(400).send('Invalid data'))
