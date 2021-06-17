@@ -98,48 +98,21 @@ module.exports ={
             .catch(error => console.log(error) || res.status(400).send('Invalid data'))               
     },
 
-    addItemToOrder: async (req, res) =>{
-        const userId = req.user.user.id
-        const product_id = req.body.product_id
-        DataBase.query(`INSERT INTO wishes (quant, product_id, customer_id, unity_price, total_price) VALUES (:quant, ${product_id}, ${userId}, (SELECT price FROM products WHERE id = "${product_id}"), (quant*unity_price))`,{replacements: req.body})
-        .then(result => console.log(result) || res.status(200).json('Product successfully added to order'))
-        .catch(error => console.log(error) || res.status(400).send('Invalid data'))
-    },
-
-    deleteItemOfOrderList: async (req, res) =>{
-        const userId = req.user.user.id
-        const product_id = req.body.product_id
-        DataBase.query(`DELETE FROM wishes WHERE customer_id = ${userId} AND product_id = ${product_id}`,{type: sequelize.QueryTypes.DELETE})
-            .then(result => console.log(result) || res.status(200).json('Product successfully deleted'))
-            .catch(error => console.log(error) || res.status(400).send('Invalid data'))
-    },
-
-    getWishes: async (req,res) => {
-        const userId = req.user.user.id
-        const db = await DataBase.query(`SELECT * FROM wishes WHERE customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
-        if(db == ""){
-            return res.status(400).json('There arent items in your list');
-        }else { 
-        res.status(200).json(db)
-        }
-    },
-
-    getCustomerWishes: async (req,res) => {
-        const userId = req.params.customer_id
-        const db = await DataBase.query(`SELECT * FROM wishes WHERE customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
-        if(db == ""){
-            return res.status(400).json('There arent items in customers list');
-        }else { 
-        res.status(200).json(db)
-        }
-    },
 
     postOrder: async (req, res) =>{
         const userId = req.user.user.id
-        DataBase.query(`INSERT INTO orders (customer_name, customer_lastname, customer_phone, customer_adress,customer_id, payment_id, total) VALUES ((SELECT name FROM customers WHERE id = "${userId}"), (SELECT lastname FROM customers WHERE id = "${userId}"), (SELECT phone FROM customers WHERE id = "${userId}"), (SELECT adress FROM customers WHERE id = "${userId}"), ${userId}, :payment_id, (SELECT SUM(total_price) FROM wishes WHERE customer_id = "${userId}"))`,{replacements: req.body})
-        DataBase.query(`INSERT INTO details (customer_id, product_id, quant) SELECT customer_id, product_id, quant FROM wishes WHERE customer_id = "${userId}"`,{replacements: req.body})
-        .then(result => console.log(result) || res.status(200).json(`Order successfully created!`)) 
-        .catch(error => console.log(error) || res.status(400).send('Invalid data'))
+        const idPago = req.body.payment_id
+        DataBase.query(`INSERT INTO orders (payment_id, customer_id) VALUES (${idPago},${userId})`)
+        const orderOK = await DataBase.query(`SELECT MAX(id) FROM orders WHERE customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
+        const orderId = Object.values(orderOK[0].valueOf('MAX(id)'))
+        req.body.items.forEach(item => {
+             DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
+        })
+        if(orderOK){
+            return res.status(200).json(`Order successfully created!`);
+        }else { 
+         res.status(400).json('Invalid Data')
+        }
     },
 
     getAllOrders: async (req,res) =>{

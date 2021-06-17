@@ -11,7 +11,7 @@ app.listen(PORT, () => {
 });
 
 const {productValidation, userValidation, onlyAdmin, userOK, orderId} = require('./middlewares');
-const {signUp,  logIn, getCustomers, deleteCustomer, createProduct, deleteProduct, updateProduct, getAllProducts, addItemToOrder, deleteItemOfOrderList, postOrder, getCustomerWishes, getWishes, getAllOrders, updateOrder, getOrder, deleteOrder} = require('./functions');
+const {signUp,  logIn, getCustomers, deleteCustomer, createProduct, deleteProduct, updateProduct, getAllProducts, postOrder, getAllOrders, updateOrder, getOrder, deleteOrder} = require('./functions');
 
 /* 
 app.get('/', function(req, res) {
@@ -32,10 +32,6 @@ app.put('/products/:id',productValidation, onlyAdmin, updateProduct);
 app.delete('/products/:id', productValidation, onlyAdmin, deleteProduct);
 
 // Orders
-app.post('/wishes', userOK, addItemToOrder);
-app.delete('/wishes', userOK, deleteItemOfOrderList);
-app.get('/wishes', userOK, getWishes);
-app.get('/wishes/:customer_id', onlyAdmin, getCustomerWishes);
 app.post('/orders', userOK, postOrder);
 app.get('/orders/:id', userOK, getOrder);
 app.get('/orders', onlyAdmin, getAllOrders);
