@@ -9,6 +9,7 @@
   "license": "ISC",
   "description": "3rd proyect for Acamica certification",
   "dependencies": {
+    "async": "^3.2.0",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

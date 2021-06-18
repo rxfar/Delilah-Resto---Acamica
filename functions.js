@@ -1,6 +1,7 @@
 const sequelize = require('sequelize');
 const DataBase = require('./connection');
 const jwt = require('jsonwebtoken');
+const { callbackify } = require('util');
 const firm = 'delilah';
 
 module.exports ={
@@ -100,23 +101,44 @@ module.exports ={
 
 
     postOrder: async (req, res) =>{
-        const userId = req.user.user.id
-        const idPago = req.body.payment_id
-        DataBase.query(`INSERT INTO orders (payment_id, customer_id) VALUES (${idPago},${userId})`)
-        const orderOK = await DataBase.query(`SELECT MAX(id) FROM orders WHERE customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
-        const orderId = Object.values(orderOK[0].valueOf('MAX(id)'))
-        req.body.items.forEach(item => {
-             DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
-        })
-        if(orderOK){
-            return res.status(200).json(`Order successfully created!`);
-        }else { 
-         res.status(400).json('Invalid Data')
+        try{
+            const userId = req.user.user.id
+            const idPago = req.body.payment_id
+            const items = req.body.items
+            const orderOK = await DataBase.query(`SELECT MAX(id)+1 FROM orders`, { type: sequelize.QueryTypes.SELECT })
+            const orderId = Object.values(orderOK[0].valueOf('MAX(id)+1 FROM orders'))
+
+            function setOrder(){
+                try{
+                    items.forEach(item => {
+                        DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
+                    });
+                } catch (err) {
+                    console.error('Error'); }
+            }
+
+            async function posting(){
+                try{
+                    await setOrder();
+                    DataBase.query(`INSERT INTO orders (id, payment_id, customer_id, total) VALUES (${orderId},${idPago},${userId}, (SELECT SUM(total_prod_price) FROM orders_detail WHERE order_id = "${orderId}"))`)
+                }
+                catch (err) {
+                    console.error('Error posting');}
+                
+            }
+            posting()
+
+            res.status(200).json(`Order successfully created!`);
+        }
+        catch (err) {
+            console.log(err);
+            res.status(400).json('Invalid data');
+            next(err);
         }
     },
 
     getAllOrders: async (req,res) =>{
-        const allOrders = await DataBase.query(`SELECT * FROM orders`, { type: sequelize.QueryTypes.SELECT })
+        const allOrders = await DataBase.query(`SELECT customer_id, order_id, status, date, product_id, quant, unity_price, total_prod_price, total, payment_id FROM orders_detail LEFT JOIN orders ON orders.id = orders_detail.order_id`, { type: sequelize.QueryTypes.SELECT })
         if(allOrders == ""){
                 return res.status(400).json('No orders here!');
             }else { 
@@ -133,9 +155,9 @@ module.exports ={
     },
 
     getOrder: async (req,res) => {
-        const id = req.params.id
+        const orderid = req.params.id
         const userId = req.user.user.id
-        const db = await DataBase.query(`SELECT * FROM orders WHERE order_id = ${id} AND customer_id = ${userId}`, { type: sequelize.QueryTypes.SELECT })
+        const db = await DataBase.query(`SELECT status, date, payment_id, total FROM orders WHERE customer_id = ${userId} AND id = ${orderid}`, { type: sequelize.QueryTypes.SELECT })
         if(db == ""){
             return res.status(400).json('You have not placed any order');
         }else { 
