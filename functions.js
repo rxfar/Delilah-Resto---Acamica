@@ -98,7 +98,6 @@ module.exports ={
             .catch(error => console.log(error) || res.status(400).send('Invalid data'))               
     },
 
-
     postOrder: async (req, res) =>{
         try{
             const userId = req.user.user.id
@@ -113,7 +112,7 @@ module.exports ={
                         DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
                     });
                 } catch (err) {
-                    console.error('Error'); }
+                    console.error('Error setting order'); }
             }
 
             async function posting(){
