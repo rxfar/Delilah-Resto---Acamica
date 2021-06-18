@@ -106,27 +106,50 @@ module.exports ={
             const orderOK = await DataBase.query(`SELECT MAX(id)+1 FROM orders`, { type: sequelize.QueryTypes.SELECT })
             const orderId = Object.values(orderOK[0].valueOf('MAX(id)+1 FROM orders'))
 
-            function setOrder(){
-                try{
-                    items.forEach(item => {
-                        DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
-                    });
-                } catch (err) {
-                    console.error('Error setting order'); }
-            }
-
-            async function posting(){
-                try{
-                    await setOrder();
-                    DataBase.query(`INSERT INTO orders (id, payment_id, customer_id, total) VALUES (${orderId},${idPago},${userId}, (SELECT SUM(total_prod_price) FROM orders_detail WHERE order_id = "${orderId}"))`)
+            if(orderId >= 1){
+                function setOrder(){
+                    try{
+                        items.forEach(item => {
+                            DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
+                        });
+                    } catch (err) {
+                        console.error('Error setting order'); }
                 }
-                catch (err) {
-                    console.error('Error posting');}
-                
+    
+                async function posting(){
+                    try{
+                        await setOrder();
+                        DataBase.query(`INSERT INTO orders (id, payment_id, customer_id, total) VALUES (${orderId},${idPago},${userId}, (SELECT SUM(total_prod_price) FROM orders_detail WHERE order_id = "${orderId}"))`)
+                    }
+                    catch (err) {
+                        console.error('Error posting');}
+                    
+                }
+                posting()
+    
+                res.status(200).json(`Order successfully created!`);
+            }else { 
+                function setOrder(){
+                    try{
+                        items.forEach(item => {
+                            DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},1, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
+                        });
+                    } catch (err) {
+                        console.error('Error setting order'); }
+                }
+    
+                async function posting(){
+                    try{
+                        await setOrder();
+                        DataBase.query(`INSERT INTO orders (id, payment_id, customer_id, total) VALUES (1,${idPago},${userId}, (SELECT SUM(total_prod_price) FROM orders_detail WHERE order_id = 1))`)
+                    }
+                    catch (err) {
+                        console.error('Error posting');}    
+                }
+                posting()
+    
+                res.status(200).json(`Order successfully created!`);
             }
-            posting()
-
-            res.status(200).json(`Order successfully created!`);
         }
         catch (err) {
             console.log(err);
@@ -165,9 +188,8 @@ module.exports ={
 
     deleteOrder: async (req,res) => {
         const id = req.params.id
-        const customer_id = req.body.customer_id
-        DataBase.query(`DELETE FROM orders WHERE order_id = ${id}`,{type: sequelize.QueryTypes.DELETE})
-        DataBase.query(`DELETE FROM wishes WHERE customer_id = ${customer_id}`,{type: sequelize.QueryTypes.DELETE})
+        DataBase.query(`DELETE FROM orders WHERE id = ${id}`,{type: sequelize.QueryTypes.DELETE})
+        DataBase.query(`DELETE FROM orders_detail WHERE order_id = ${id}`,{type: sequelize.QueryTypes.DELETE})
         .then(result => (console.log(result)) || res.status(200).json("Order successfully deleted"))
         .catch(error => console.log(error) || res.status(400).send('Invalid data'))
     }
