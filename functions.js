@@ -1,7 +1,6 @@
 const sequelize = require('sequelize');
 const DataBase = require('./connection');
 const jwt = require('jsonwebtoken');
-const { callbackify } = require('util');
 const firm = 'delilah';
 
 module.exports ={
