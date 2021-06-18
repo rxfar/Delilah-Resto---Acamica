@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-05-2021 a las 03:04:25
+-- Tiempo de generación: 18-06-2021 a las 22:13:59
 -- Versión del servidor: 10.4.17-MariaDB
 -- Versión de PHP: 8.0.1
 
@@ -46,7 +46,8 @@ CREATE TABLE `customers` (
 INSERT INTO `customers` (`id`, `user`, `pass`, `name`, `lastname`, `email`, `phone`, `adress`, `is_admin`) VALUES
 (1, 'rp123', 'pass', 'Robert', 'Plant', 'robertplant@gmail.com', 1166666667, 'Reino Unido 83', 0),
 (3, 'rxxfar', 'pass', 'Rosario', 'Farias', 'rosario@gmail.com', 1166666666, '221 Baker St', 1),
-(5, 'IndioSol', 'indio666', 'Carlos Alberto', 'Solari', 'isolari@gmail.com', 1166666667, 'Una direccion cualquiera', 0);
+(5, 'IndioSol', 'indio666', 'Carlos Alberto', 'Solari', 'isolari@gmail.com', 1166666667, 'Una direccion cualquiera', 0),
+(7, 'Pepe', 'pass', 'Pepe', 'Blanco', 'pepe@gmail.com', 1166666657, 'Una direccion cualquiera', 0);
 
 -- --------------------------------------------------------
 
@@ -55,10 +56,11 @@ INSERT INTO `customers` (`id`, `user`, `pass`, `name`, `lastname`, `email`, `pho
 --
 
 CREATE TABLE `orders` (
-  `order_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `status` enum('New','Confirmed','InProgress','Sent','Delivered','Canceled') NOT NULL DEFAULT 'New',
   `date` datetime NOT NULL DEFAULT current_timestamp(),
   `payment_id` enum('Cash','Creditcard','Debitcard') NOT NULL,
+  `total` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -66,8 +68,37 @@ CREATE TABLE `orders` (
 -- Volcado de datos para la tabla `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `status`, `date`, `payment_id`, `customer_id`) VALUES
-(16, 'New', '2021-05-31 00:59:03', 'Creditcard', 1);
+INSERT INTO `orders` (`id`, `status`, `date`, `payment_id`, `total`, `customer_id`) VALUES
+(1, 'New', '2021-06-18 20:06:07', 'Creditcard', 3600, 1),
+(2, 'New', '2021-06-18 20:06:39', 'Creditcard', 3600, 1),
+(3, 'New', '2021-06-18 20:06:50', 'Creditcard', 3600, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `orders_detail`
+--
+
+CREATE TABLE `orders_detail` (
+  `detail_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quant` int(11) NOT NULL,
+  `unity_price` int(11) NOT NULL,
+  `total_prod_price` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `orders_detail`
+--
+
+INSERT INTO `orders_detail` (`detail_id`, `order_id`, `product_id`, `quant`, `unity_price`, `total_prod_price`) VALUES
+(139, 1, 5, 2, 1000, 2000),
+(140, 1, 4, 2, 800, 1600),
+(141, 2, 5, 2, 1000, 2000),
+(142, 2, 4, 2, 800, 1600),
+(143, 3, 5, 2, 1000, 2000),
+(144, 3, 4, 2, 800, 1600);
 
 -- --------------------------------------------------------
 
@@ -89,30 +120,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `product`, `description`, `price`, `image_id`, `disponibility`) VALUES
-(2, 'Comida de prueba 2', 'Esta es otra comida de prueba', '1000', 2, 1),
-(3, 'Comida de prueba 3', 'Esta es otra comida de prueba', '800', 4, 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `wishes`
---
-
-CREATE TABLE `wishes` (
-  `id` int(11) NOT NULL,
-  `quant` int(2) NOT NULL DEFAULT 1,
-  `product_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `wishes`
---
-
-INSERT INTO `wishes` (`id`, `quant`, `product_id`, `customer_id`) VALUES
-(5, 1, 2, 5),
-(15, 2, 1, 1),
-(16, 2, 2, 1);
+(4, 'Comida de prueba', 'Esta es otra comida de prueba', '800', 4, 1),
+(5, 'Comida de prueba 2', 'Esta es otra comida de prueba', '1000', 4, 1);
 
 --
 -- Índices para tablas volcadas
@@ -129,18 +138,20 @@ ALTER TABLE `customers`
 -- Indices de la tabla `orders`
 --
 ALTER TABLE `orders`
-  ADD PRIMARY KEY (`order_id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customerid` (`customer_id`);
+
+--
+-- Indices de la tabla `orders_detail`
+--
+ALTER TABLE `orders_detail`
+  ADD PRIMARY KEY (`detail_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indices de la tabla `products`
 --
 ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indices de la tabla `wishes`
---
-ALTER TABLE `wishes`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -151,25 +162,35 @@ ALTER TABLE `wishes`
 -- AUTO_INCREMENT de la tabla `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `orders`
+-- AUTO_INCREMENT de la tabla `orders_detail`
 --
-ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+ALTER TABLE `orders_detail`
+  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `wishes`
+-- Restricciones para tablas volcadas
 --
-ALTER TABLE `wishes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- Filtros para la tabla `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `customerid` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`);
+
+--
+-- Filtros para la tabla `orders_detail`
+--
+ALTER TABLE `orders_detail`
+  ADD CONSTRAINT `productid` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
