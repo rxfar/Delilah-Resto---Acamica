@@ -14,7 +14,7 @@ It includes the following features:
 	- Delete products (only admin)
 - Orders actions:
 	- Place an order
-	- Get a single order
+	- Get an order
 	- Get all orders list (only admin)
 	- Update orders status (only admin)
 	- Delete orders (only admin)	
