@@ -13,11 +13,8 @@ It includes the following features:
 	- Update existing products (only admin)
 	- Delete products (only admin)
 - Orders actions:
-	- Add products to future order / wishes
-	- Delete products of future order / wishes
-	- Get future order / wishes list
 	- Place an order
-	- Get a single order
+	- Get an order
 	- Get all orders list (only admin)
 	- Update orders status (only admin)
 	- Delete orders (only admin)	
@@ -39,10 +36,7 @@ Incluye las siguientes acciones:
 	- Actualizar productos existentes (solo administrador)
 	- Borrar productos (solo administrador)
 - Acciones de pedidos:
-	- Agregar productos a la futura orden / carrito
-	- Borrar productos de la futura orden / carrito
-	- Acceder a la futura orden / carrito
-	- Confirmar un pedido
+	- Realizar un pedido
 	- Acceder a un pedido
 	- Acceder al listado completo de pedidos (solo administrador)
 	- Actualizar el estado de un pedido (solo administrador)
