@@ -55,8 +55,8 @@ module.exports = {
         }
     },
     orderId: async (req, res, next) => {
-        const db = await DataBase.query(`SELECT * FROM orders WHERE order_id = ${req.params.id}`, {type: sequelize.QueryTypes.SELECT})
-        const dbFind = db.find(item => item.order_id == req.params.id)
+        const db = await DataBase.query(`SELECT * FROM orders WHERE id = ${req.params.id}`, {type: sequelize.QueryTypes.SELECT})
+        const dbFind = db.find(item => item.id == req.params.id)
         if(!dbFind){
             return res.status(400).json('Invalid id');
         } 

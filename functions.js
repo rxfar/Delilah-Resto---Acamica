@@ -110,7 +110,7 @@ module.exports ={
                 function setOrder(){
                     try{
                         items.forEach(item => {
-                            DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
+                            DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unit_price, total_prod_price) VALUES (${item.quant},${item.product_id},${orderId}, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unit_price))`)
                         });
                     } catch (err) {
                         console.error('Error setting order'); }
@@ -132,7 +132,7 @@ module.exports ={
                 function setOrder(){
                     try{
                         items.forEach(item => {
-                            DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unity_price, total_prod_price) VALUES (${item.quant},${item.product_id},1, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unity_price))`)
+                            DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unit_price, total_prod_price) VALUES (${item.quant},${item.product_id},1, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unit_price))`)
                         });
                     } catch (err) {
                         console.error('Error setting order'); }
@@ -159,7 +159,7 @@ module.exports ={
     },
 
     getAllOrders: async (req,res) =>{
-        const allOrders = await DataBase.query(`SELECT customer_id, order_id, status, date, product_id, quant, unity_price, total_prod_price, total, payment_id FROM orders_detail LEFT JOIN orders ON orders.id = orders_detail.order_id`, { type: sequelize.QueryTypes.SELECT })
+        const allOrders = await DataBase.query(`SELECT customer_id, order_id, status, date, product_id, quant, unit_price, total_prod_price, total, payment_id FROM orders_detail LEFT JOIN orders ON orders.id = orders_detail.order_id`, { type: sequelize.QueryTypes.SELECT })
         if(allOrders == ""){
                 return res.status(400).json('No orders here!');
             }else { 
@@ -170,7 +170,7 @@ module.exports ={
     updateOrder: (req,res) => {
         const id = req.params.id
         const status = req.body.status
-        DataBase.query(`UPDATE orders SET status = '${status}' WHERE order_id = ${id} `,{type: sequelize.QueryTypes.SET})
+        DataBase.query(`UPDATE orders SET status = '${status}' WHERE id = ${id} `,{type: sequelize.QueryTypes.SET})
         .then(result => (console.log(result)) || res.status(200).json('State successfully updated'))
         .catch(error => console.log(error) || res.status(400).send('Invalid status'))
     },
@@ -178,7 +178,9 @@ module.exports ={
     getOrder: async (req,res) => {
         const orderid = req.params.id
         const userId = req.user.user.id
-        const db = await DataBase.query(`SELECT status, date, payment_id, total FROM orders WHERE customer_id = ${userId} AND id = ${orderid}`, { type: sequelize.QueryTypes.SELECT })
+        const db = await DataBase.query(`SELECT customer_id, order_id, status, date, product_id, quant, unit_price, total_prod_price, total as 'order_total', payment_id FROM orders_detail LEFT JOIN orders ON orders.id = orders_detail.order_id
+        
+        WHERE orders.customer_id = ${userId} AND orders.id = ${orderid}`, { type: sequelize.QueryTypes.SELECT })
         if(db == ""){
             return res.status(400).json('You have not placed any order');
         }else { 
@@ -188,8 +190,8 @@ module.exports ={
 
     deleteOrder: async (req,res) => {
         const id = req.params.id
-        DataBase.query(`DELETE FROM orders WHERE id = ${id}`,{type: sequelize.QueryTypes.DELETE})
-        DataBase.query(`DELETE FROM orders_detail WHERE order_id = ${id}`,{type: sequelize.QueryTypes.DELETE})
+        DataBase.query(`DELETE FROM orders WHERE id = "${id}"`,{type: sequelize.QueryTypes.DELETE})
+        DataBase.query(`DELETE FROM orders_detail WHERE order_id = "${id}"`,{type: sequelize.QueryTypes.DELETE})
         .then(result => (console.log(result)) || res.status(200).json("Order successfully deleted"))
         .catch(error => console.log(error) || res.status(400).send('Invalid data'))
     }
