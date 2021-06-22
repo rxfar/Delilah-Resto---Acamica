@@ -115,19 +115,16 @@ module.exports ={
                     } catch (err) {
                         console.error('Error setting order'); }
                 }
-    
                 async function posting(){
                     try{
                         await setOrder();
                         DataBase.query(`INSERT INTO orders (id, payment_id, customer_id, total) VALUES (${orderId},${idPago},${userId}, (SELECT SUM(total_prod_price) FROM orders_detail WHERE order_id = "${orderId}"))`)
-                    }
-                    catch (err) {
-                        console.error('Error posting');}
-                    
+                    }catch (err) {
+                    console.error('Error posting');}   
                 }
                 posting()
-    
                 res.status(200).json(`Order successfully created!`);
+
             }else { 
                 function setOrder(){
                     try{
@@ -135,9 +132,8 @@ module.exports ={
                             DataBase.query(`INSERT INTO orders_detail (quant, product_id, order_id, unit_price, total_prod_price) VALUES (${item.quant},${item.product_id},1, (SELECT price FROM products WHERE id = "${item.product_id}"), (quant*unit_price))`)
                         });
                     } catch (err) {
-                        console.error('Error setting order'); }
+                        console.error('Error setting order');}
                 }
-    
                 async function posting(){
                     try{
                         await setOrder();
@@ -147,7 +143,6 @@ module.exports ={
                         console.error('Error posting');}    
                 }
                 posting()
-    
                 res.status(200).json(`Order successfully created!`);
             }
         }

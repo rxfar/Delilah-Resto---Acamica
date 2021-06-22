@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-06-2021 a las 22:13:59
--- Versión del servidor: 10.4.17-MariaDB
--- Versión de PHP: 8.0.1
+-- Tiempo de generación: 22-06-2021 a las 03:29:36
+-- Versión del servidor: 10.4.19-MariaDB
+-- Versión de PHP: 8.0.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -46,8 +46,7 @@ CREATE TABLE `customers` (
 INSERT INTO `customers` (`id`, `user`, `pass`, `name`, `lastname`, `email`, `phone`, `adress`, `is_admin`) VALUES
 (1, 'rp123', 'pass', 'Robert', 'Plant', 'robertplant@gmail.com', 1166666667, 'Reino Unido 83', 0),
 (3, 'rxxfar', 'pass', 'Rosario', 'Farias', 'rosario@gmail.com', 1166666666, '221 Baker St', 1),
-(5, 'IndioSol', 'indio666', 'Carlos Alberto', 'Solari', 'isolari@gmail.com', 1166666667, 'Una direccion cualquiera', 0),
-(7, 'Pepe', 'pass', 'Pepe', 'Blanco', 'pepe@gmail.com', 1166666657, 'Una direccion cualquiera', 0);
+(8, 'Usuario', 'pass', 'Ejemplo', 'Cualquiera', 'ej@gmail.com', 1166666557, 'Una direccion cualquiera', 0);
 
 -- --------------------------------------------------------
 
@@ -69,9 +68,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `status`, `date`, `payment_id`, `total`, `customer_id`) VALUES
-(1, 'New', '2021-06-18 20:06:07', 'Creditcard', 3600, 1),
-(2, 'New', '2021-06-18 20:06:39', 'Creditcard', 3600, 1),
-(3, 'New', '2021-06-18 20:06:50', 'Creditcard', 3600, 1);
+(1, 'Delivered', '2021-06-22 01:22:38', 'Creditcard', 800, 1);
 
 -- --------------------------------------------------------
 
@@ -80,11 +77,11 @@ INSERT INTO `orders` (`id`, `status`, `date`, `payment_id`, `total`, `customer_i
 --
 
 CREATE TABLE `orders_detail` (
-  `detail_id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quant` int(11) NOT NULL,
-  `unity_price` int(11) NOT NULL,
+  `unit_price` int(11) NOT NULL,
   `total_prod_price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -92,13 +89,8 @@ CREATE TABLE `orders_detail` (
 -- Volcado de datos para la tabla `orders_detail`
 --
 
-INSERT INTO `orders_detail` (`detail_id`, `order_id`, `product_id`, `quant`, `unity_price`, `total_prod_price`) VALUES
-(139, 1, 5, 2, 1000, 2000),
-(140, 1, 4, 2, 800, 1600),
-(141, 2, 5, 2, 1000, 2000),
-(142, 2, 4, 2, 800, 1600),
-(143, 3, 5, 2, 1000, 2000),
-(144, 3, 4, 2, 800, 1600);
+INSERT INTO `orders_detail` (`id`, `order_id`, `product_id`, `quant`, `unit_price`, `total_prod_price`) VALUES
+(30, 1, 4, 1, 800, 800);
 
 -- --------------------------------------------------------
 
@@ -145,7 +137,7 @@ ALTER TABLE `orders`
 -- Indices de la tabla `orders_detail`
 --
 ALTER TABLE `orders_detail`
-  ADD PRIMARY KEY (`detail_id`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `product_id` (`product_id`);
 
 --
@@ -162,13 +154,13 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT de la tabla `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `orders_detail`
 --
 ALTER TABLE `orders_detail`
-  MODIFY `detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `products`

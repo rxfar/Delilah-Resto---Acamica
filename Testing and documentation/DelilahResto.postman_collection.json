@@ -1,27 +1,11 @@
 {
 	"info": {
-		"_postman_id": "c94aa88b-88fd-4c42-a876-609eb984264b",
+		"_postman_id": "b5abe30e-7f13-4628-b403-350b9a775f15",
 		"name": "DelilahResto",
 		"description": "Api - 3rd proyect required for Acamica certification ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
-		{
-			"name": "Home de la API",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:3001",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "3001"
-				}
-			},
-			"response": []
-		},
 		{
 			"name": "Get customers",
 			"request": {
@@ -58,7 +42,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user\": \"Pepe\",\r\n    \"pass\": \"pass\",\r\n    \"name\": \"Pepe\",\r\n    \"lastname\": \"Blanco\",\r\n    \"email\": \"pepe@gmail.com\",\r\n    \"phone\": \"1166666657\",\r\n    \"adress\": \"Una direccion cualquiera\"\r\n}",
+					"raw": "{\r\n    \"user\": \"Usuario\",\r\n    \"pass\": \"pass\",\r\n    \"name\": \"Ejemplo\",\r\n    \"lastname\": \"Cualquiera\",\r\n    \"email\": \"ej@gmail.com\",\r\n    \"phone\": \"1166666557\",\r\n    \"adress\": \"Una direccion cualquiera\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -86,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"user\": \"IndioSol\",\r\n    \"pass\": \"indio666\"\r\n}",
+					"raw": "{\r\n    \"user\": \"Usuario\",\r\n    \"pass\": \"pass\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -133,7 +117,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3001/customers/4",
+					"raw": "http://localhost:3001/customers/5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -141,7 +125,7 @@
 					"port": "3001",
 					"path": [
 						"customers",
-						"4"
+						"5"
 					]
 				}
 			},
@@ -281,7 +265,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJwYXNzIjoicGFzcyJ9LCJpYXQiOjE2MjE5MDEzMjF9.ec6kwEcWaCYHIu3Sa8cQTCOWQoG-wpU_y-iGqEm096Q",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo4LCJwYXNzIjoicGFzcyJ9LCJpYXQiOjE2MjQzMjUwNzF9.A6aaB72OZGLZVkUb_h3BzlQkitkOvA04u-u6iZhzwwI",
 							"type": "string"
 						}
 					]
@@ -320,7 +304,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"customer_id\": 1\r\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -328,7 +312,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3001/orders/15",
+					"raw": "http://localhost:3001/orders/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -336,7 +320,7 @@
 					"port": "3001",
 					"path": [
 						"orders",
-						"15"
+						"2"
 					]
 				}
 			},
@@ -388,7 +372,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"status\": \"Canceled\"\r\n}",
+					"raw": "{\r\n    \"status\": \"Delivered\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -396,7 +380,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3001/orders/7",
+					"raw": "http://localhost:3001/orders/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -404,7 +388,7 @@
 					"port": "3001",
 					"path": [
 						"orders",
-						"7"
+						"1"
 					]
 				}
 			},
@@ -418,7 +402,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJwYXNzIjoicGFzcyJ9LCJpYXQiOjE2MjE5MDEzMjF9.ec6kwEcWaCYHIu3Sa8cQTCOWQoG-wpU_y-iGqEm096Q",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo4LCJwYXNzIjoicGFzcyJ9LCJpYXQiOjE2MjQzMjUwNzF9.A6aaB72OZGLZVkUb_h3BzlQkitkOvA04u-u6iZhzwwI",
 							"type": "string"
 						}
 					]
@@ -427,7 +411,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"payment_id\": \"2\",\r\n    \"items\": [ { \"product_id\": 5, \"quant\": 2 }, { \"product_id\": 4, \"quant\": 2 }]\r\n}",
+					"raw": "{\r\n    \"payment_id\": \"2\",\r\n    \"items\": [ { \"product_id\": 4, \"quant\": 1 }, { \"product_id\": 5, \"quant\": 2 }]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
