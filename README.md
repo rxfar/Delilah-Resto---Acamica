@@ -14,7 +14,7 @@ It includes the following features:
 	- Delete products (only admin)
 - Orders actions:
 	- Place an order
-	- Get an order
+	- Get your order
 	- Get all orders list (only admin)
 	- Update orders status (only admin)
 	- Delete orders (only admin)	
@@ -37,7 +37,7 @@ Incluye las siguientes acciones:
 	- Borrar productos (solo administrador)
 - Acciones de pedidos:
 	- Realizar un pedido
-	- Acceder a un pedido
+	- Acceder a tu pedido
 	- Acceder al listado completo de pedidos (solo administrador)
 	- Actualizar el estado de un pedido (solo administrador)
 	- Borrar pedidos (solo administrador)	
